@@ -1,0 +1,9 @@
+.todo-list {
+    display: flex;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.todo-list ul li {
+    list-style-type: none;
+}
