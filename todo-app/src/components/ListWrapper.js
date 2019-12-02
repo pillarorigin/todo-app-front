@@ -7,42 +7,41 @@ import TextAreaCard from './TextAreaCard';
 
 import './ListWrapper.css';
 
-const url = 'http://localhost:5000/todos';
+const url = 'http://localhost:5000/api/todos';
 
 const ListWrapper = () => {
   const [todo, setTodo] = useState('');
   const [todos, setTodos] = useState(null);
   const [createMode, setCreateMode] = useState(false);
 
-  const UniqKey = () => {
-    if (todos && todos.length) {
-      return todos[todos.length - 1].id + 1;
-    } else {
-      return 0;
-    };
-  };
+  // const UniqKey = () => {
+  //   if (todos && todos.length) {
+  //     return todos[todos.length - 1].id + 1;
+  //   } else {
+  //     return 0;
+  //   };
+  // };
 
   const getTodos = async () => {
     const result = await Axios.get(url);
     // result > status > 200 일때!
+    // console.log(result.data);
     const { data } = result;
-    setTodos(data);
+    setTodos(data.todos);
   };
 
   const postTodos = async (e) => {
     e.preventDefault();
     const sample = {
       //현재 todos의 길이 보다 하나 크게
-      id: UniqKey(),
       content: todo,
-      completed: false
     };
     //const id = sample.id; // sample의 id 속성값
     //const {id} = sample; // sample의 속성 중 id 값 (디스트럭처링(구조를 분해)) 위 와 결과 같음 
     const result = await Axios.post(url, sample);
     const { data } = result; ////result의 속성 중 data를 디스트럭처링
-    
-    setTodos([...todos, data]); ////주의점은 react가 지켜보고 있는 state가 바뀌어야 react가 그것을 감지하고 새로 render해줌.
+    console.log(data.todos);
+    setTodos([...todos, data.todos]); ////주의점은 react가 지켜보고 있는 state가 바뀌어야 react가 그것을 감지하고 새로 render해줌.
     setTodo('');
     setCreateMode(!createMode);
   };
@@ -56,7 +55,7 @@ const ListWrapper = () => {
     //우리가 잘라놓은 애를 감지할 수 있게 해줘야하므로 setTodos() 사용.
     setTodos([...todos]);
     //todos.splice()함수가 pop 동작하는 애라 splice의 return값이 한 요소만 알려주므로 전체가 지워짐
-        //그래서 바뀐 todos를 array로 뿌려줘야 해서 ... 구조할당
+    //그래서 바뀐 todos를 array로 뿌려줘야 해서 ... 구조할당
   };
 
   // 체크박스 onchange사용하기 위해 
