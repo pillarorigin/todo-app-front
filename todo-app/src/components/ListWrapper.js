@@ -39,8 +39,9 @@ const ListWrapper = () => {
     //const id = sample.id; // sample의 id 속성값
     //const {id} = sample; // sample의 속성 중 id 값 (디스트럭처링(구조를 분해)) 위 와 결과 같음 
     const result = await Axios.post(url, sample);
+    // console.log('result:',result);
     const { data } = result; ////result의 속성 중 data를 디스트럭처링
-    console.log(data.todos);
+    // console.log(data.todos);
     setTodos([...todos, data.todos]); ////주의점은 react가 지켜보고 있는 state가 바뀌어야 react가 그것을 감지하고 새로 render해줌.
     setTodo('');
     setCreateMode(!createMode);
@@ -49,7 +50,7 @@ const ListWrapper = () => {
   const deleteTodos = async (id) => {
     await Axios.delete(url + `/${id}`);
     //find helper method를 이용하여 배열에 접근
-    const targetTodo = todos.find(el => el.id === id);
+    const targetTodo = todos.find(el => el._id === id);
     const idx = todos.indexOf(targetTodo);
     todos.splice(idx, 1); //실제 todos 바뀌었지만 react는 아직 감지 못함
     //우리가 잘라놓은 애를 감지할 수 있게 해줘야하므로 setTodos() 사용.
@@ -60,11 +61,12 @@ const ListWrapper = () => {
 
   // 체크박스 onchange사용하기 위해 
   const patchCompleted = async (id) => {
-    const targetTodo = todos.find(el => el.id === id);
+    const targetTodo = todos.find(el => el._id === id);
     //id에 해당하는 값으로 pacth접근
     await Axios.patch(url + `/${id}`, { completed: !targetTodo.completed }); //데이터(completed) 넣을 자리
     //화면에서도 수정되게
     targetTodo.completed = !targetTodo.completed;
+    //todos를 새로 binding
     setTodos([...todos]);
   };
 
